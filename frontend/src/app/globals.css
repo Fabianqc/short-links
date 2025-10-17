@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  @keyframes move-stars {
+    from { background-position: 0 0; }
+    to { background-position: -10000px 5000px; }
+  }
+
+.animate-sky-flow {
+  animation: move-stars 1s linear infinite; /* <-- Cambiado a 25s */
+}
+}

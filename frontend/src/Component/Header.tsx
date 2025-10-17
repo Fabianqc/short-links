@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 export default function Header() {
     const [isScroller, setisScroller] = useState(false);
-    const [hasSession, sethasSession] = useState(true);
+    const [hasSession, sethasSession] = useState(false);
     const [isOpen, setisOpen] = useState(false);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ export default function Header() {
             <div className="flex items-center w-4/5 transition-all duration-500">
                 <span><Link href="#">ShortLinks</Link></span>
             </div>
-            <span className="m-2"><Link href="http://192.168.0.120:3000/#About">About</Link></span>
+            <span className="m-2"><Link href="/#About">About</Link></span>
             <span className="m-2"><Link href="#">Contact</Link></span>
 
             {hasSession ?
@@ -85,7 +85,7 @@ export default function Header() {
                 :
                 <>
                     <button className={`w-25 m-2 flex items-center justify-center rounded-full bg-zinc-200 p-2 font-semibold text-zinc-900 cursor-pointer transition-all duration-500 hover:scale-105 ${isScroller ? 'h-8' : 'h-10'}`}>Register</button>
-                    <button className={`w-25 p-2 m-2 flex items-center justify-center font-semibold text-zinc-200 rounded-full border-2 cursor-pointer hover:scale-105 transition-all duration-500 ${isScroller ? 'h-8' : 'h-10'}`}>Login</button>
+                    <Link href="/Login" className={`w-25 p-2 m-2 flex items-center justify-center font-semibold text-zinc-200 rounded-full border-2 cursor-pointer hover:scale-105 transition-all duration-500 ${isScroller ? 'h-8' : 'h-10'}`} >Login</Link>
                 </>
             }
         </header>

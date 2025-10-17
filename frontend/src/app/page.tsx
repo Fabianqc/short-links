@@ -1,8 +1,11 @@
-import Image from "next/image";
+import MiFooter from "@/Component/Footer";
+import Header from "@/Component/Header";
+import React from "react";
 
 export default function Home() {
   return (
     <main>
+      <Header />
       <section className="with-background-pattern flex min-h-screen flex-col items-center justify-center gap-10 p-24 " >
         <div className="flex flex-col items-center justify-center gap-2">
           <h1 className="text-4xl font-semibold text-pretty text-center">
@@ -36,9 +39,7 @@ export default function Home() {
           Thank you for being part of our community. We are constantly working to improve and add new features that make your digital life a little easier.
         </p>
       </section>
-      <footer>
-        
-      </footer>
+      <MiFooter/>
     </main>
   );
 }

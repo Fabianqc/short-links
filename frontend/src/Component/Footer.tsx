@@ -5,7 +5,7 @@ import React from "react";
 
 import GithubPhoto from "../../public/GithubIcono.webp"
 import InstagramIcono from "../../public/InstagramIcono.webp"
-import GmailIcono from "../../public/GmailIcono.webp"
+import GmailIcono from "../../public/GmailIcono.svg"
 export default function MiFooter() {
     return (
         <footer className="w-full bg-zinc-950 p-2 pt-10 flex flex-row items-center justify-center gap-10 text-zinc-400 text-center">

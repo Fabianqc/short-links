@@ -7,14 +7,23 @@ import Image from "next/image";
 import PasswordEyeClosed from "@/icon/PasswordEyeClosed";
 import PasswordEyeOpen from "@/icon/PasswordEyeOpen";
 import svgGoogleIcon from '../../icon/GoogleIcon.svg'
-export default function Login() {
+export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
     return (
         <main className="flex flex-col items-center justify-around gap-10 w-full h-screen transition-all duration-800">
 
             <section className="w-3/10 p-[3cqw] min-w-80 rounded-[3cqw] bg-zinc-600 @container">
-                <h2 className="text-[10cqw] font-semibold text-pretty text-center mb-[10cqw]">Login</h2>
+                <h2 className="text-[10cqw] font-semibold text-pretty text-center mb-[10cqw]">Register</h2>
                 <form className="  flex flex-col items-center justify-center  gap-4">
+                    <label htmlFor="Username" className="flex flex-col items-start justify-center w-full text-[3.5cqw] text-pretty text-zinc-100  -mb-[3cqw]">Username</label>
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        name="Username"
+                        id="Username"
+                        className="w-full h-[15cqw] text-[5cqw] rounded-[3cqw] border border-zinc-800 bg-zinc-900 px-[5cqw] py-2 focus:outline-none focus:ring-2 focus:ring-zinc-200 hover:border-zinc-200 transition-all duration-300"
+                    />
+
                     <label htmlFor="Email" className="flex flex-col items-start justify-center w-full text-[3.5cqw] text-pretty text-zinc-100  -mb-[3cqw]">Email</label>
                     <input
                         type="email"
@@ -36,14 +45,15 @@ export default function Login() {
                         />
                         <button className="w-1/10 flex items-center justify-center transition-all duration-300" onClick={() => setShowPassword(!showPassword)} type="button">
                             {showPassword ?
-                                <PasswordEyeOpen/>
+                                <PasswordEyeOpen />
                                 :
-                                <PasswordEyeClosed/>
+                                <PasswordEyeClosed />
                             }
                         </button>
                     </div>
+                    
                     <button className="w-full h-[15cqw] text-[5cqw] rounded-[3cqw] bg-zinc-200 px-4 py-2 font-semibold text-zinc-900 transition-all duration-300 hover:bg-zinc-800 hover:text-zinc-200 ">
-                        Login
+                        Register
                     </button>
                 </form>
                 <hr className="w-full h-[0.5cqw] my-[3cqw] bg-zinc-700 border-none " />

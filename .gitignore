@@ -9,6 +9,7 @@ backend/dist/
 .env
 .env.development
 .env.production
+client_secret_978397440838-scchineh8vovegvlatad292tj6lq5vbh.apps.googleusercontent.com.json
 
 
 # Compilación y logs

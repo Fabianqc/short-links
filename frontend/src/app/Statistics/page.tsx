@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from "react";
-
+import {useSession} from 'next-auth/react'
 
 // importacion de componentes de react necesarios 
 import Header from "@/Component/Header";
@@ -8,6 +8,10 @@ import Footer from "@/Component/Footer";
 
 
 export default function Statistics() {
+    const { data: session, status } = useSession();
+    console.log(session);
+    console.log(status);
+    
     return (
         <main className="flex flex-col items-center justify-around gap-4 w-full  transition-all duration-800 ">
             <Header />

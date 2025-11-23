@@ -1,5 +1,5 @@
 'use client'
-import React, { use, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import ProfilePhoto from '../icon/ProfilePhoto.webp'
 import Link from "next/link";
 import Image from "next/image";

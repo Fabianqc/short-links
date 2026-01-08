@@ -1,8 +1,8 @@
 'use client'
 import React, { useState, useEffect } from "react";
-import {useSession} from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 
-// importacion de componentes de react necesarios 
+// importation of react components 
 import Header from "@/Component/Header";
 import Footer from "@/Component/Footer";
 
@@ -11,44 +11,47 @@ export default function Statistics() {
     const { data: session, status } = useSession();
     console.log(session);
     console.log(status);
-    
+
     return (
         <main className="flex flex-col items-center justify-around gap-4 w-full  transition-all duration-800 ">
             <Header />
-            <section id="TitlePage" className="w-screen  @container flex items-center justify-around pt-20">
-                <h2 className="w-fit font-mono text-[2cqw] text-pretty">Statistics</h2>
-                <div className="w-3/10 h-1/10 flex flex-row items-center justify-around">
-                    <div className="h-full flex flex-col items-center justify-center">
-                        <label htmlFor="StartDate" className="w-fit font-mono text-[1cqw] text-pretty">Date</label>
-                        <input id="StartDate" type="date" className="w-full appearance-none pl-4 pr-10  text-white border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-500  transition-all duration-300" />
-                        <div className="group flex flex-col items-center">
-                            <label htmlFor="EndDate" className="font-mono text-sm text-zinc-700 group-hover:text-zinc-100 transition-all duration-300">To</label>
-                            <input id="EndDate" type="date" className="w-full appearance-none pl-4 pr-10 text-white border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-500  transition-all duration-300" />
+            <section id="TitlePage" className="w-full px-4 md:px-10 flex flex-col md:flex-row items-center justify-between pt-20 gap-4">
+                <h2 className="w-fit font-mono text-3xl md:text-4xl text-pretty">Statistics</h2>
+                <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                        <div className="flex flex-col w-full">
+                            <label htmlFor="StartDate" className="font-mono text-sm mb-1 text-pretty">Date</label>
+                            <input id="StartDate" type="date" className="w-full appearance-none px-4 py-2 text-[var(--text-primary)] border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-500 transition-all duration-300" />
+                        </div>
+                        <div className="group flex flex-col items-center w-full">
+                            <label htmlFor="EndDate" className="font-mono text-sm text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-all duration-300 mb-1">To</label>
+                            <input id="EndDate" type="date" className="w-full appearance-none px-4 py-2 text-[var(--text-primary)] border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-500 transition-all duration-300" />
                         </div>
                     </div>
-                    <button className=" py-[1cqw] px-[2cqw] rounded-[2cqw] ring-1 ring-zinc-800 focus:outline-offset-5  focus:outline-zinc-500 focus:outline-2  active:ring-2 active:ring-zinc-200 active:bg-zinc-700 focus:outline-offset-2 "> Export</button>
+                    <button className="py-2 px-6 rounded-xl ring-2 ring-zinc-800 hover:bg-zinc-700 hover:text-white transition-all duration-300"> Export</button>
                 </div>
             </section>
-            <section className="w-full flex flex-row items-center justify-around">
-                <article className="w-11/20 bg-zinc-900 ring-zinc-700 ring-1 rounded-[2cqw] h-[30cqw] flex items-center justify-center ">
+
+            <section className="w-full px-4 md:px-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <article className="w-full bg-[var(--bg-secondary)] ring-zinc-700 ring-1 rounded-2xl h-64 flex items-center justify-center ">
                     <h3>grafico</h3>
                 </article>
-                <article className="w-8/20 bg-zinc-900 ring-zinc-700 ring-1 rounded-[2cqw] h-[30cqw] flex items-center justify-center">
+                <article className="w-full bg-[var(--bg-secondary)] ring-zinc-700 ring-1 rounded-2xl h-64 flex items-center justify-center">
                     <h3>articulos</h3>
                 </article>
             </section>
-            <section className="w-full flex flex-row items-center justify-around">
-                <div className="w-7/20 h-full flex flex-col items-center">
-                    <article className="w-full bg-zinc-900 ring-zinc-700 ring-1 rounded-[2cqw] h-[29cqw] flex items-center justify-center ">
-                        <h3>grafico</h3>
-                    </article>
-                    <article className="w-full bg-zinc-900 ring-zinc-700 ring-1 rounded-[2cqw] h-[29cqw] flex items-center justify-center mt-4 ">
-                        <h3>grafico</h3>
-                    </article>
 
+            <section className="w-full px-4 md:px-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex flex-col gap-6 md:col-span-1">
+                    <article className="w-full bg-[var(--bg-secondary)] ring-zinc-700 ring-1 rounded-2xl h-64 flex items-center justify-center ">
+                        <h3>grafico</h3>
+                    </article>
+                    <article className="w-full bg-[var(--bg-secondary)] ring-zinc-700 ring-1 rounded-2xl h-64 flex items-center justify-center">
+                        <h3>grafico</h3>
+                    </article>
                 </div>
 
-                <article className="w-12/20 bg-zinc-900 ring-zinc-700 ring-1 rounded-[2cqw] h-[60cqw] flex items-center justify-center">
+                <article className="w-full bg-[var(--bg-secondary)] ring-zinc-700 ring-1 rounded-2xl h-[530px] flex items-center justify-center md:col-span-2">
                     <h3>articulos</h3>
                 </article>
             </section>

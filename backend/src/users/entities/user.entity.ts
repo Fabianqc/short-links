@@ -1,19 +1,18 @@
+import { Exclude } from 'class-transformer';
 import { UUID } from 'crypto';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   idUsers: UUID;
 
   @Column()
   User: string;
 
-  @Column({
-    type: 'bytea',
-    nullable: true,
-  })
-  PassHash: Buffer;
+  @Column()
+  @Exclude() //this moment the frontend never send the password hash
+  PassHash: string;
 
   @Column()
   IdGoogle: string;

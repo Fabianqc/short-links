@@ -1,6 +1,6 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import jwt from "jsonwebtoken"; // 👈 Importante
+
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -9,36 +9,60 @@ export const authOptions: AuthOptions = {
             clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET ?? ""
         })
     ],
-    // Asegúrate de que esta variable esté en tu .env local del frontend
+    // We verified that the secret is in the .env file
     secret: process.env.NEXTAUTH_SECRET, 
     
     callbacks: {
-        async jwt({ token, account, user }) {
-            // Solo en el momento del login
-            if (account && user) {
-                // 👇 AQUÍ CREAMOS EL TOKEN PARA NESTJS
-                const tokenParaBackend = jwt.sign(
-                    {
-                        sub: user.id, // El ID del usuario
-                        email: user.email,
-                        name: user.name
-                    },
-                    process.env.NEXTAUTH_SECRET!, // Usamos la misma clave del .env
-                    { expiresIn: '1d' } 
-                );
+        async signIn({ user, account }) {
+            if (account && account.provider === "google") {
+                try {
+                    const response = await fetch("http://localhost:3001/auth/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            Email: user.email,
+                            name: user.name,
+                            googleId: user.id
+                        }),
+                    });
 
-                // Guardamos ese token nuevo dentro del objeto token de NextAuth
-                token.backendAccessToken = tokenParaBackend;
+                    if (!response.ok) {
+                        return false;
+                    }
+
+                    const data = await response.json();
+                    // We save the token that the backend returns in the user object
+                    (user as any).backendAccessToken = data.access_token;
+                    return true;
+                } catch (error) {
+                    console.error("Error logging in with backend:", error);
+                    return false;
+                }
             }
+            return true;
+        },
+
+        async jwt({ token, account, user }) {
+            // 1. Initial login
+            if (account && user) {
+                // We recover the token that we saved in signIn
+                token.backendAccessToken = (user as any).backendAccessToken;
+                
+                // Optional: If the backend returns expiration, we would use it here.
+                // For now, we assume a standard duration or decode it if necessary.
+                token.backendAccessTokenExpires = Date.now() + 86400 * 1000; 
+            }
+            // Here we could maintain the renewal logic if your backend supports refresh tokens,
+            // but for now we use the backend token as is.
             return token;
         },
 
         async session({ session, token }) {
-            // 👇 Pasamos el token a la sesión para que el cliente lo pueda leer
             (session as any).backendAccessToken = token.backendAccessToken;
             return session;
         }
-        
     },
     pages:{
         signIn: '/Login'

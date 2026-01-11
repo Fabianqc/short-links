@@ -1,5 +1,5 @@
-import { IsString, MinLength, IsEmail, IsDateString } from 'class-validator';
-import { Transform} from 'class-transformer'
+import { IsString, MinLength, IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer'
 
 export class CreateUserDto {
   @IsString()
@@ -7,20 +7,22 @@ export class CreateUserDto {
   User: string;
 
   @IsString()
+  @IsOptional()
   @MinLength(8, { message: 'Your Password is too short' })
-  PassHash: string;
+  PassHash?: string;
 
   @IsString()
-  IdGoogle: string;
+  @IsOptional()
+  IdGoogle?: string;
 
   @IsEmail({}, { message: 'this is not a valid email' })
-  @Transform(({value})=> value.toLowerCase().trim())
+  @IsNotEmpty({ message: 'Email is required' })
+  @Transform(({ value }) => value.toLowerCase().trim())
   Email: string;
 
   @IsString()
   @MinLength(3, { message: 'Your Name is too short' })
+  @IsOptional()
   Name: string;
 
-  @IsDateString()
-  Create_at: string;
 }

@@ -39,4 +39,4 @@ import { UsersHasShortlinksModule } from './users_has_shortlinks/users_has_short
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

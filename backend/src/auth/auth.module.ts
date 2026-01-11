@@ -9,6 +9,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 // import services
 import { AuthService } from './auth.service';
+import { HashingService } from '../common/providers/hashing/hashing.service';
 // import modules
 import { UsersModule } from '../users/users.module';
 // create module
@@ -26,7 +27,7 @@ import { UsersModule } from '../users/users.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, HashingService],
   exports: [PassportModule, JwtStrategy, AuthService],
 })
 export class AuthModule {}

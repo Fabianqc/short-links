@@ -10,11 +10,11 @@ export class User {
   @Column()
   User: string;
 
-  @Column()
+  @Column({nullable: true})
   @Exclude() //this moment the frontend never send the password hash
   PassHash: string;
 
-  @Column()
+  @Column({nullable: true})
   IdGoogle: string;
 
   @Column()

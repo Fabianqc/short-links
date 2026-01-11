@@ -12,6 +12,7 @@ export default function Header() {
     const [hasSession, sethasSession] = useState(false);
     const [isOpen, setisOpen] = useState(false);
     const { data: session, status } = useSession();
+
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 100) {
@@ -38,8 +39,8 @@ export default function Header() {
             <div className="flex items-center w-4/5 transition-all duration-500">
                 <span><Link href="/" className="text-2xl md:text-xl font-bold" >ShortLinks</Link></span>
             </div>
-            <span className={`mx-2 text-lg font-medium transition-opacity duration-300 ${isScroller ? 'opacity-0 md:opacity-100' : 'opacity-0 md:opacity-100'}`}><Link href="/#About">About</Link></span>
-            <span className={`mx-2 text-lg font-medium transition-opacity duration-300 ${isScroller ? 'opacity-0 md:opacity-100' : 'opacity-0 md:opacity-100'}`}><Link href="/#Contact">Contact</Link></span>
+            <span className={`mx-2 text-lg font-medium transition-opacity duration-300 ${isScroller ? 'hidden md:block' : 'hidden md:block'}`}><Link href="/#About">About</Link></span>
+            <span className={`mx-2 text-lg font-medium transition-opacity duration-300 ${isScroller ? 'hidden md:block' : 'hidden md:block'}`}><Link href="/#Contact">Contact</Link></span>
 
             <div className="mx-4">
                 <ThemeToggle />
@@ -103,7 +104,7 @@ export default function Header() {
                 </>
                 :
                 <div className="flex items-center gap-2">
-                    <Link href="/Register" className={`flex items-center justify-center rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] font-semibold cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-md px-6 py-2 text-base md:text-sm ${isScroller ? 'h-10' : 'h-12'}`}>Register</Link>
+                    <Link href="/Register" className={`flex items-center justify-center rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] font-semibold cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-md px-6 py-2 hidden md:flex text-base md:text-sm  ${isScroller ? 'h-10' : 'h-12'}`}>Register</Link>
                     <Link href="/Login" className={`flex items-center justify-center font-semibold text-[var(--text-primary)] rounded-full border-2 border-[var(--border-color)] cursor-pointer hover:scale-105 transition-all duration-300 px-6 py-2 text-base md:text-sm ${isScroller ? 'h-10' : 'h-12'}`} >Login</Link>
                 </div>
             }

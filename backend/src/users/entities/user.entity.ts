@@ -4,28 +4,30 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  idUsers: UUID;
+  @PrimaryGeneratedColumn('uuid', { name: 'idUsers' })
+  @Exclude()
+  id: UUID;
 
-  @Column()
-  User: string;
+  @Column({ name: 'User' })
+  username: string;
 
-  @Column({nullable: true})
+  @Column({ name: 'PassHash', nullable: true })
   @Exclude() //this moment the frontend never send the password hash
-  PassHash: string;
+  password: string;
 
-  @Column({nullable: true})
-  IdGoogle: string;
+  @Column({ name: 'IdGoogle', nullable: true })
+  googleId: string;
 
-  @Column()
-  Email: string;
+  @Column({ name: 'Email' })
+  email: string;
 
-  @Column()
-  Name: string;
+  @Column({ name: 'Name' })
+  name: string;
 
   @Column({
+    name: 'Create_at',
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  Create_at: Date;
+  createdAt: Date;
 }

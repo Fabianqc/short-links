@@ -1,14 +1,23 @@
 'use client'
-import React from 'react'
-import { useTheme } from '@/context/ThemeContext'
+import React, { useEffect, useState } from 'react'
+import { useTheme } from 'next-themes'
 
 export default function ThemeToggle() {
-    const { theme, toggleTheme } = useTheme()
+    const { theme, setTheme } = useTheme()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) {
+        return <div className="p-2 rounded-full w-9 h-9 bg-[var(--bg-tertiary)]" /> // Placeholder
+    }
 
     return (
         <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-[var(--bg-tertiary)] hover:scale-110 transition-all duration-300 flex items-center justify-center"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="p-2 rounded-full bg-[var(--bg-tertiary)] hover:scale-110 transition-all duration-300 flex items-center justify-center cursor-pointer"
             aria-label={`Cambiar a modo ${theme === 'dark' ? 'claro' : 'oscuro'}`}
         >
             {theme === 'dark' ? (

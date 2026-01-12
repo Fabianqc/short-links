@@ -4,25 +4,25 @@ import { Transform } from 'class-transformer'
 export class CreateUserDto {
   @IsString()
   @MinLength(3, { message: 'Your UserName is too short' })
-  User: string;
+  username: string;
 
   @IsString()
   @IsOptional()
   @MinLength(8, { message: 'Your Password is too short' })
-  PassHash?: string;
+  password?: string;
 
   @IsString()
   @IsOptional()
-  IdGoogle?: string;
+  googleId?: string;
 
   @IsEmail({}, { message: 'this is not a valid email' })
   @IsNotEmpty({ message: 'Email is required' })
   @Transform(({ value }) => value.toLowerCase().trim())
-  Email: string;
+  email: string;
 
   @IsString()
   @MinLength(3, { message: 'Your Name is too short' })
   @IsOptional()
-  Name: string;
+  name: string;
 
 }

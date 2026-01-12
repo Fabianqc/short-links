@@ -12,10 +12,12 @@ import { AuthService } from './auth.service';
 import { HashingService } from '../common/providers/hashing/hashing.service';
 // import modules
 import { UsersModule } from '../users/users.module';
+import { EventusersessionModule } from '../eventusersession/eventusersession.module';
 // create module
 @Module({
   imports: [
     UsersModule,
+    EventusersessionModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

@@ -11,7 +11,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-[data-theme="dark"] {
+.dark {
   --bg-primary: #09090b;
   --bg-secondary: #18181b;
   --bg-tertiary: #27272a;

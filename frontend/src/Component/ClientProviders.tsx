@@ -1,15 +1,15 @@
 'use client'
 
-import { ThemeProvider } from "@/context/ThemeContext"
+import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { SessionProvider } from "next-auth/react"
 import { ReactNode } from "react"
 
 export default function ClientProviders({ children }: { children: ReactNode }) {
     return (
-        <ThemeProvider>
+        <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
             <SessionProvider>
                 {children}
             </SessionProvider>
-        </ThemeProvider>
+        </NextThemesProvider>
     )
 }

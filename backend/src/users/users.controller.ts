@@ -20,20 +20,4 @@ import { JwtAuthGuard } from '../common/guards/api-key/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Get(':email')
-  findOne(@Param('email') email: string) {
-    return this.usersService.findOneByEmail(email);
-  }
-
-  @Patch(':email')
-  update(@Param('email') email: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(email, updateUserDto);
-  }
-
 }

@@ -1,11 +1,9 @@
 import MiFooter from "@/Component/Footer";
-import Header from "@/Component/Header";
 import React from "react";
 
 export default function Home() {
   return (
     <main>
-      <Header />
       <section className="with-background-pattern flex min-h-screen flex-col items-center justify-center gap-5 p-8 md:p-24 @container bg-[var(--bg-primary)] transition-all duration-300" >
         <div className="flex flex-col items-center justify-center gap-2">
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-semibold text-pretty text-center transition-all duration-300 text-[var(--text-primary)]">

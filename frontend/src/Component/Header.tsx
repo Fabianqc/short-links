@@ -6,10 +6,11 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "./ThemeToggle";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
+    const pathname = usePathname();
     const [isScroller, setisScroller] = useState(false);
-    const [hasSession, sethasSession] = useState(false);
     const [isOpen, setisOpen] = useState(false);
     const { data: session, status } = useSession();
 
@@ -24,16 +25,9 @@ export default function Header() {
         window.addEventListener("scroll", handleScroll)
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
-    useEffect(() => {
-        if (status === "authenticated") {
-            sethasSession(true)
-            const sessionexp = session;
-            console.log(sessionexp);
 
-        } else {
-            sethasSession(false)
-        }
-    }, [status])
+    // Ocultar header en login y register
+    if (pathname === '/Login' || pathname === '/Register') return null;
     return (
         <header className={` w-full flex items-center px-4 fixed top-0 z-50 justify-between text-[var(--text-primary)] ease-in-out transition-all duration-500 ${isScroller ? 'bg-[var(--bg-secondary)] shadow-lg h-16 md:h-14' : 'bg-transparent h-24 md:h-20'}`}>
             <div className="flex items-center w-4/5 transition-all duration-500">
@@ -46,7 +40,9 @@ export default function Header() {
                 <ThemeToggle />
             </div>
 
-            {hasSession ?
+            {status === "loading" ? (
+                <div className="h-10 w-10 rounded-full bg-[var(--bg-tertiary)] animate-pulse" />
+            ) : status === "authenticated" ? (
                 <>
                     <Image
                         className={`rounded-full border-2 border-[var(--border-color)] hover:scale-105 transition-all duration-500 cursor-pointer ${isScroller ? 'w-10 h-10 md:w-8 md:h-8' : 'w-12 h-12 md:w-10 md:h-10'} `}
@@ -102,12 +98,12 @@ export default function Header() {
                         </nav>
                     ) : null}
                 </>
-                :
+            ) : (
                 <div className="flex items-center gap-2">
                     <Link href="/Register" className={`flex items-center justify-center rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] font-semibold cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-md px-6 py-2 hidden md:flex text-base md:text-sm  ${isScroller ? 'h-10' : 'h-12'}`}>Register</Link>
                     <Link href="/Login" className={`flex items-center justify-center font-semibold text-[var(--text-primary)] rounded-full border-2 border-[var(--border-color)] cursor-pointer hover:scale-105 transition-all duration-300 px-6 py-2 text-base md:text-sm ${isScroller ? 'h-10' : 'h-12'}`} >Login</Link>
                 </div>
-            }
+            )}
         </header>
     )
 

@@ -1,26 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUsersHasShortlinkDto } from './dto/create-users_has_shortlink.dto';
-import { UpdateUsersHasShortlinkDto } from './dto/update-users_has_shortlink.dto';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { Repository, EntityManager } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UsersHasShortlink } from './entities/users_has_shortlink.entity';
+import { UUID } from 'crypto';
 
 @Injectable()
 export class UsersHasShortlinksService {
-  create(createUsersHasShortlinkDto: CreateUsersHasShortlinkDto) {
-    return 'This action adds a new usersHasShortlink';
+  constructor(
+    @InjectRepository(UsersHasShortlink)
+    private readonly usersHasShortlinksRepository: Repository<UsersHasShortlink>,
+  ) { }
+
+  async createUsersHasShortlink(userId: UUID, shortlinkId: UUID, manager?: EntityManager) {
+    if (!userId || !shortlinkId) {
+      throw new BadRequestException('User id and shortlink id are required');
+    }
+
+    const repo = manager ? manager.getRepository(UsersHasShortlink) : this.usersHasShortlinksRepository;
+
+    const usersHasShortlink = repo.create({
+      userId,
+      shortlinkId,
+    });
+    return repo.save(usersHasShortlink);
   }
 
-  findAll() {
-    return `This action returns all usersHasShortlinks`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} usersHasShortlink`;
-  }
-
-  update(id: number, updateUsersHasShortlinkDto: UpdateUsersHasShortlinkDto) {
-    return `This action updates a #${id} usersHasShortlink`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} usersHasShortlink`;
-  }
 }

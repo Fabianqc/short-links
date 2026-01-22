@@ -1,57 +1,117 @@
-'use client'
-// importacion de librerias necesarias 
+"use client";
+// importation of libraries
 import React, { useState } from "react";
-import Image from "next/image";
+import GoogleButton from "@/Component/GoogleButton";
+import { signIn } from "next-auth/react";
 
-// importacion de imagenes 
+
+// importation of images
 import PasswordEyeClosed from "@/icon/PasswordEyeClosed";
 import PasswordEyeOpen from "@/icon/PasswordEyeOpen";
-import svgGoogleIcon from '../../icon/GoogleIcon.svg'
+import { useRouter } from "next/navigation";
 export default function Login() {
+
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [errorKey, setErrorKey] = useState(0);
+    const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            setError('All fields are required');
+            setErrorKey(prev => prev + 1);
+            return;
+        }
+        setLoading(true);
+        try {
+            const result = await signIn('credentials', {
+                email,
+                password,
+                redirect: false,
+            })
+            if (result?.error) {
+                setError('Invalid credentials');
+                setErrorKey(prev => prev + 1);
+            } else {
+                router.push('/');
+            }
+        } catch (error) {
+            console.log(error);
+            setError('Something went wrong');
+            setErrorKey(prev => prev + 1);
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
-        <main className="flex flex-col items-center justify-around gap-10 w-full h-screen transition-all duration-800">
-
-            <section className="w-3/10 p-[3cqw] min-w-80 rounded-[3cqw] bg-zinc-600 @container">
-                <h2 className="text-[10cqw] font-semibold text-pretty text-center mb-[10cqw]">Login</h2>
-                <form className="  flex flex-col items-center justify-center  gap-4">
-                    <label htmlFor="Email" className="flex flex-col items-start justify-center w-full text-[3.5cqw] text-pretty text-zinc-100  -mb-[3cqw]">Email</label>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        name="Email"
-                        id="Email"
-                        className="w-full h-[15cqw] text-[5cqw] rounded-[3cqw] border border-zinc-800 bg-zinc-900 px-[5cqw] py-2 focus:outline-none focus:ring-2 focus:ring-zinc-200 hover:border-zinc-200 transition-all duration-300"
-                    />
-                    <label htmlFor="Password" className="flex flex-col items-start justify-center w-full text-[3.5cqw] text-pretty text-zinc-100 -mb-[3cqw]">Password</label>
-
-                    <div className="w-full h-[15cqw]  rounded-[3cqw] border border-zinc-800 bg-zinc-900 flex px-[5cqw] hover:border-zinc-200 transition-all duration-300 ">
-
+        <main className="flex flex-col items-center justify-around gap-10 w-full h-screen transition-all duration-300 bg-[var(--bg-primary)] p-4">
+            <section className="w-full max-w-md p-8 rounded-3xl bg-[var(--bg-tertiary)] @container transition-all duration-300 shadow-xl">
+                <h2 className="text-4xl font-semibold text-pretty text-center mb-10 text-[var(--text-primary)]">
+                    Login
+                </h2>
+                <div className="flex flex-col items-center justify-center gap-5">
+                    <div className="w-full">
+                        <label
+                            htmlFor="Email"
+                            className="flex flex-col items-start justify-center w-full text-sm font-medium text-[var(--text-secondary)] mb-2"
+                        >
+                            Email
+                        </label>
                         <input
-                            type={showPassword ? "text" : "password"}
-                            placeholder={showPassword ? "Password" : "************"}
-                            name="Password"
-                            id="Password"
-                            className="w-9/10 text-[5cqw] rounded-lg py-2 focus:outline-none text-base trasition-all duration-300"
+                            type="email"
+                            placeholder="Email"
+                            name="Email"
+                            id="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full h-12 text-base rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--text-secondary)] hover:border-[var(--text-secondary)] transition-all duration-300 text-[var(--text-primary)]"
                         />
-                        <button className="w-1/10 flex items-center justify-center transition-all duration-300" onClick={() => setShowPassword(!showPassword)} type="button">
-                            {showPassword ?
-                                <PasswordEyeOpen/>
-                                :
-                                <PasswordEyeClosed/>
-                            }
-                        </button>
                     </div>
-                    <button className="w-full h-[15cqw] text-[5cqw] rounded-[3cqw] bg-zinc-200 px-4 py-2 font-semibold text-zinc-900 transition-all duration-300 hover:bg-zinc-800 hover:text-zinc-200 ">
-                        Login
+
+                    <div className="w-full">
+                        <label
+                            htmlFor="Password"
+                            className="flex flex-col items-start justify-center w-full text-sm font-medium text-[var(--text-secondary)] mb-2"
+                        >
+                            Password
+                        </label>
+
+                        <div className="w-full h-12 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] flex px-4 hover:border-[var(--text-secondary)] transition-all duration-300 items-center">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder={showPassword ? "Password" : "************"}
+                                name="Password"
+                                id="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full text-base bg-transparent focus:outline-none text-[var(--text-primary)]"
+                            />
+                            <button
+                                className="ml-2 flex items-center justify-center transition-all duration-300 opacity-70 hover:opacity-100"
+                                onClick={() => setShowPassword(!showPassword)}
+                                type="button"
+                            >
+                                {showPassword ? <PasswordEyeOpen /> : <PasswordEyeClosed />}
+                            </button>
+                        </div>
+                    </div>
+
+                    <button className="w-full h-12 text-lg rounded-full bg-[var(--text-primary)] px-4 font-semibold text-[var(--bg-primary)] transition-all duration-300 hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] border border-transparent hover:border-[var(--text-primary)]"
+                        onClick={handleLogin} disabled={loading}>
+                        {loading ? 'Loading...' : 'Login'}
                     </button>
-                </form>
-                <hr className="w-full h-[0.5cqw] my-[3cqw] bg-zinc-700 border-none " />
-                <button className="w-full h-[12cqw] text-[4cqw] rounded-[3cqw] bg-zinc-800 px-[5cqw] py-[3cqw] font-semibold flex flex-row justify-center text-center item-center transition-all duration-300 hover:bg-zinc-200 hover:text-zinc-800 group ">
-                    <Image src={svgGoogleIcon} alt="Google Icon" width={36} height={36} className="h-[6cqw] w-[6cqw] invert group-hover:invert-0 transition-all duration-300" />
-                    <span className="ml-[2cqw] flex flex-col justify-center">Continue with Google</span>
-                </button>
+                    <div className="w-full flex items-center justify-between flex-col ">
+                        <p> Don&apos;t have an account? <a href="/Register" className="text-[var(--text-primary)]">Register</a></p>
+                        {error && <p key={errorKey} className="text-red-500 text-sm mt-2 animate-shake">{error}</p>}
+                    </div>
+                </div>
+                <hr className="w-full h-px my-6 bg-[var(--border-color)] border-none " />
+                <GoogleButton />
             </section>
         </main>
-    )
+    );
 }
+

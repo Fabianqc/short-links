@@ -1,28 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --bg-primary: #f4f4f5;
+  --bg-secondary: #e4e4e7;
+  --bg-tertiary: #d4d4d8;
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --border-color: #a1a1aa;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --bg-primary: #09090b;
+  --bg-secondary: #18181b;
+  --bg-tertiary: #27272a;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --border-color: #3f3f46;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer utilities {
@@ -34,4 +36,14 @@ body {
 .animate-sky-flow {
   animation: move-stars 1s linear infinite; /* <-- Cambiado a 25s */
 }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+    20%, 40%, 60%, 80% { transform: translateX(2px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+  }
 }

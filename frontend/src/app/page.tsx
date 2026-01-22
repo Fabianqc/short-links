@@ -1,17 +1,52 @@
+'use client';
 import MiFooter from "@/Component/Footer";
-import Header from "@/Component/Header";
 import React from "react";
+import { useSession } from "next-auth/react";
+import axiosInstanceClient from "./utils/axios";
+import { useState } from "react";
+import { getAxiosErrorMessage } from "@/app/utils/errorHandler";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  const [shortLink, setShortLink] = useState('');
+  const [longLink, setLongLink] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handelShorten = async () => {
+
+    if (!session) {
+      router.push('/Login');
+      return;
+    }
+    if (!longLink) {
+      setError('Please enter a long link');
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axiosInstanceClient.post('/eventlinks', {
+        url: longLink,
+      });
+      setShortLink(response.data.shortLink);
+    } catch (error) {
+      console.log(error);
+      setError(getAxiosErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main>
-      <Header />
-      <section className="with-background-pattern flex min-h-screen flex-col items-center justify-center gap-5 p-[7cqw] @container" >
+      <section className="with-background-pattern flex min-h-screen flex-col items-center justify-center gap-5 p-8 md:p-24 @container bg-[var(--bg-primary)] transition-all duration-300" >
         <div className="flex flex-col items-center justify-center gap-2">
-          <h1 className="text-[11cqw] md:text-[5cqw] font-semibold text-pretty text-center transition-all duration-300">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-semibold text-pretty text-center transition-all duration-300 text-[var(--text-primary)]">
             Shorten Your Loooong Links :)
           </h1>
-          <p className="text-zinc-400 text-pretty text-center text-[5cqw] md:text-[2.5cqw] transition-all duration-300">
+          <p className="text-[var(--text-secondary)] text-pretty text-center text-xl md:text-3xl transition-all duration-300">
             ShortLinks is an open source link shortener for developers.
           </p>
         </div>
@@ -19,27 +54,32 @@ export default function Home() {
           <input
             type="url"
             placeholder="Enter your loooong link here"
-            className="w-full rounded-[3cqw] border border-zinc-800 bg-zinc-900 px-[1cqw] py-[1cqw] text-[6cqw] md:text-[2cqw] transition-all duration-300 focus:outline-none focus:ring-[0.2cqw] focus:ring-zinc-700 md:w-1/2"
+            className="w-full rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] px-4 py-3 text-xl md:text-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--border-color)] md:w-1/2 text-[var(--text-primary)]"
+            value={longLink}
+            onChange={(e) => setLongLink(e.target.value)}
           />
-          <button className="w-full rounded-[3cqw] bg-zinc-200 px-[2cqw] py-[1cqw] text-[6cqw] md:text-[2cqw] hover:bg-zinc-800 hover:text-zinc-200 hover:scale-105 font-semibold text-zinc-900 md:w-fit transition-all duration-300">
+          <button onClick={handelShorten} className="w-full rounded-2xl bg-[var(--text-primary)] px-8 py-3 text-xl md:text-lg hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] hover:scale-105 font-semibold text-[var(--bg-primary)] md:w-fit transition-all duration-300">
             Shorten Now!
           </button>
         </div>
+        {error && <p className="text-red-500 text-center mt-2">"{error}"</p>}
+        {shortLink && <p className="text-green-500 text-center mt-2">"{shortLink}"</p>}
 
       </section>
-      <section className="h-fit with-background-pattern flex  flex-col items-center justify-center p-8 md:p-24  bg-zinc-900" id="About">
-        <h2 className="w-full text-4xl font-semibold text-pretty text-center text-left">About US</h2>
-        <p className=" md:w-3/5 text-zinc-400 text-pretty text-left self-start mt-1">
+      <section className="h-fit with-background-pattern flex  flex-col items-center justify-center p-8 md:p-24 bg-[var(--bg-secondary)] transition-all duration-300" id="About">
+        <h2 className="w-full text-4xl font-semibold text-pretty text-center text-left text-[var(--text-primary)]">About US</h2>
+        <p className=" md:w-3/5 text-[var(--text-secondary)] text-pretty text-left self-start mt-1">
           We believe in a simpler, more connected internet. In a digital landscape filled with information, every character counts—and thats why we created ShortLinks.
         </p>
-        <p className="md:w-3/5 text-zinc-400 text-pretty text-left self-start mt-1">
+        <p className="md:w-3/5 text-[var(--text-secondary)] text-pretty text-left self-start mt-1">
           Our mission is to provide a powerful yet incredibly easy-to-use solution to shorten, manage, and analyze your links. Born as an open-source project, we built this tool with developers, content creators, and anyone who values efficiency and a clean design in mind.
         </p>
-        <p className="md:w-3/5 text-zinc-400 text-pretty text-left self-start mt-1">
+        <p className="md:w-3/5 text-[var(--text-secondary)] text-pretty text-left self-start mt-1">
           Thank you for being part of our community. We are constantly working to improve and add new features that make your digital life a little easier.
         </p>
       </section>
-      <MiFooter/>
+      <MiFooter />
     </main>
   );
 }
+

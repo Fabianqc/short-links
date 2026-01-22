@@ -3,12 +3,12 @@ import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
 // create an axios instance
-const axiosInstance = axios.create({
+const axiosInstanceClient = axios.create({
     // set the base url of the api
     baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 // add an interceptor to the axios instance
-axiosInstance.interceptors.request.use(
+axiosInstanceClient.interceptors.request.use(
     async (config) => {
         // get the session
         const session = await getSession();
@@ -25,4 +25,4 @@ axiosInstance.interceptors.request.use(
     }
 );
 // export the axios instance
-export default axiosInstance;
+export default axiosInstanceClient;

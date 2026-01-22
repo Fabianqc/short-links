@@ -2,10 +2,10 @@ import { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import axios from "axios";
 import credentials from "next-auth/providers/credentials";
-import axiosInstance from "@/app/utils/axios";
+import { JWT } from "next-auth/jwt";
 
 // Helper to refresh the token
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token: JWT) {
     try {
         const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/auth/refresh", {
             oldToken: token.backendRefreshToken, // Send the refresh token as oldToken

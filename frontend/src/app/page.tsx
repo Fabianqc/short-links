@@ -1,7 +1,44 @@
+'use client';
 import MiFooter from "@/Component/Footer";
 import React from "react";
+import { useSession } from "next-auth/react";
+import axiosInstanceClient from "./utils/axios";
+import { useState } from "react";
+import { getAxiosErrorMessage } from "@/app/utils/errorHandler";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  const [shortLink, setShortLink] = useState('');
+  const [longLink, setLongLink] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handelShorten = async () => {
+
+    if (!session) {
+      router.push('/Login');
+      return;
+    }
+    if (!longLink) {
+      setError('Please enter a long link');
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axiosInstanceClient.post('/eventlinks', {
+        url: longLink,
+      });
+      setShortLink(response.data.shortLink);
+    } catch (error) {
+      console.log(error);
+      setError(getAxiosErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main>
       <section className="with-background-pattern flex min-h-screen flex-col items-center justify-center gap-5 p-8 md:p-24 @container bg-[var(--bg-primary)] transition-all duration-300" >
@@ -18,11 +55,15 @@ export default function Home() {
             type="url"
             placeholder="Enter your loooong link here"
             className="w-full rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] px-4 py-3 text-xl md:text-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--border-color)] md:w-1/2 text-[var(--text-primary)]"
+            value={longLink}
+            onChange={(e) => setLongLink(e.target.value)}
           />
-          <button className="w-full rounded-2xl bg-[var(--text-primary)] px-8 py-3 text-xl md:text-lg hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] hover:scale-105 font-semibold text-[var(--bg-primary)] md:w-fit transition-all duration-300">
+          <button onClick={handelShorten} className="w-full rounded-2xl bg-[var(--text-primary)] px-8 py-3 text-xl md:text-lg hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] hover:scale-105 font-semibold text-[var(--bg-primary)] md:w-fit transition-all duration-300">
             Shorten Now!
           </button>
         </div>
+        {error && <p className="text-red-500 text-center mt-2">"{error}"</p>}
+        {shortLink && <p className="text-green-500 text-center mt-2">"{shortLink}"</p>}
 
       </section>
       <section className="h-fit with-background-pattern flex  flex-col items-center justify-center p-8 md:p-24 bg-[var(--bg-secondary)] transition-all duration-300" id="About">

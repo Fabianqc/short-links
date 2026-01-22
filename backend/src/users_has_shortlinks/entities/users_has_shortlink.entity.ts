@@ -1,6 +1,7 @@
-import { PrimaryColumn } from "typeorm";
+import { Entity, PrimaryColumn } from "typeorm";
 import { UUID } from "crypto";
 
+@Entity("users_has_shortlinks")
 export class UsersHasShortlink {
 
     @PrimaryColumn({type: 'uuid', name:"Users_idUsers"})

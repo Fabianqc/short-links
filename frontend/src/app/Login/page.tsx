@@ -39,6 +39,7 @@ export default function Login() {
                 router.push('/');
             }
         } catch (error) {
+            console.log(error);
             setError('Something went wrong');
             setErrorKey(prev => prev + 1);
         } finally {
@@ -99,11 +100,11 @@ export default function Login() {
                     </div>
 
                     <button className="w-full h-12 text-lg rounded-full bg-[var(--text-primary)] px-4 font-semibold text-[var(--bg-primary)] transition-all duration-300 hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] border border-transparent hover:border-[var(--text-primary)]"
-                        onClick={handleLogin}>
-                        Login
+                        onClick={handleLogin} disabled={loading}>
+                        {loading ? 'Loading...' : 'Login'}
                     </button>
                     <div className="w-full flex items-center justify-between flex-col ">
-                        <p> Don't have an account? <a href="/Register" className="text-[var(--text-primary)]">Register</a></p>
+                        <p> Don&apos;t have an account? <a href="/Register" className="text-[var(--text-primary)]">Register</a></p>
                         {error && <p key={errorKey} className="text-red-500 text-sm mt-2 animate-shake">{error}</p>}
                     </div>
                 </div>

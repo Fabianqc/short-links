@@ -5,7 +5,7 @@ import { UpdateEventlinkDto } from './dto/update-eventlink.dto';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ActiveUser } from 'src/common/decorators/active-user.decorator';
-import { User } from 'src/users/entities/user.entity';
+import ActiveUserInterface from 'src/common/interface/active-user.interface';
 import { UseInterceptors } from '@nestjs/common';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 
@@ -16,7 +16,7 @@ export class EventlinksController {
   constructor(private readonly eventlinksService: EventlinksService) {}
 
     @Post()
-    create(@ActiveUser() user: User, @Body() createEventlinkDto: CreateEventlinkDto) {
+    create(@ActiveUser() user: ActiveUserInterface, @Body() createEventlinkDto: CreateEventlinkDto) {
         return this.eventlinksService.createEventlink(user, createEventlinkDto);
     }
     

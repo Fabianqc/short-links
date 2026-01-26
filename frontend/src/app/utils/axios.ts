@@ -24,5 +24,7 @@ axiosInstanceClient.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+
 // export the axios instance
 export default axiosInstanceClient;
+

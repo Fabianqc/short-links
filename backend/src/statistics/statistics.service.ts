@@ -1,26 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateStatisticDto } from './dto/create-statistic.dto';
-import { UpdateStatisticDto } from './dto/update-statistic.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Statistic } from './entities/statistic.entity';
+import {  Repository } from 'typeorm';
+import { UUID } from 'crypto';
 
 @Injectable()
 export class StatisticsService {
-  create(createStatisticDto: CreateStatisticDto) {
-    return 'This action adds a new statistic';
-  }
-
-  findAll() {
-    return `This action returns all statistics`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} statistic`;
-  }
-
-  update(id: number, updateStatisticDto: UpdateStatisticDto) {
-    return `This action updates a #${id} statistic`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} statistic`;
-  }
 }

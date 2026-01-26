@@ -25,4 +25,8 @@ export class UsersHasShortlinksService {
     return repo.save(usersHasShortlink);
   }
 
+  findAllByUserId(userId: UUID) {
+    return this.usersHasShortlinksRepository.find({ where: { userId }});
+  }
+
 }

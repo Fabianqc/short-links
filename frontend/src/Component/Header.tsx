@@ -26,8 +26,12 @@ export default function Header() {
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
 
-    // Ocultar header en login y register
-    if (pathname === '/Login' || pathname === '/Register') return null;
+    // Mostrar header SOLO en rutas permitidas
+    // Esto oculta el header en Home, Login, Register y cualquier Dynamic Route (slugs)
+    const allowedRoutes = ['/Statistics', '/'];
+
+    // Si la ruta actual no está en la lista de permitidas, no mostrar el header
+    if (!allowedRoutes.includes(pathname)) return null;
     return (
         <header className={` w-full flex items-center px-4 fixed top-0 z-50 justify-between text-[var(--text-primary)] ease-in-out transition-all duration-500 ${isScroller ? 'bg-[var(--bg-secondary)] shadow-lg h-16 md:h-14' : 'bg-transparent h-24 md:h-20'}`}>
             <div className="flex items-center w-4/5 transition-all duration-500">

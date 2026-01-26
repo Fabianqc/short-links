@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateEventlinkDto } from './dto/create-eventlink.dto';
 import { UpdateEventlinkDto } from './dto/update-eventlink.dto';
 import { Repository, DataSource } from 'typeorm';
@@ -7,6 +7,10 @@ import { Eventlink, EventLinkType } from './entities/eventlink.entity';
 import { ShortlinksService } from 'src/shortlinks/shortlinks.service';
 import { UsersHasShortlinksService } from 'src/users_has_shortlinks/users_has_shortlinks.service';
 import ActiveUserInterface from 'src/common/interface/active-user.interface';
+import { UUID } from 'crypto';
+import { Shortlink } from 'src/shortlinks/entities/shortlink.entity';
+import { UsersHasShortlink } from 'src/users_has_shortlinks/entities/users_has_shortlink.entity';
+
 
 @Injectable()
 export class EventlinksService {
@@ -57,5 +61,32 @@ export class EventlinksService {
       // we release the transaction
       await queryRunner.release();
     }
+  }
+
+  async searchEventLinkByShortlinkUrl(shortlinkUrl: string) {
+    const shortlink = await this.shortlinksService.findShortLinkByShortUrl(shortlinkUrl);
+    if (!shortlink) {
+      throw new NotFoundException('Shortlink not found');
+    }
+    return shortlink;
+  }
+
+  async findAllByUserId(userId: UUID) {
+    const linksIdUser: UsersHasShortlink[]  = await this.usersHasShortlinksService.findAllByUserId(userId);
+    if (linksIdUser.length === 0) {
+      throw new NotFoundException('Links not found');
+    }
+    const promises = linksIdUser.map((Link : UsersHasShortlink)=> this.shortlinksService.findShortLinkById(Link.shortlinkId))
+    const links = await Promise.all(promises)
+    if (links.length === 0) {
+      throw new NotFoundException('Links not found');
+    }
+    let linksOrdered = links.sort((a : Shortlink, b : Shortlink)=> b.count - a.count)
+    if (linksOrdered.length > 6) {
+      linksOrdered = linksOrdered.slice(0, 6)
+    }
+    return linksOrdered;
+    
+    
   }
 }

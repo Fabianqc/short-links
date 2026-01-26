@@ -24,5 +24,6 @@ export class Shortlink {
 
     @Generated('increment')
     @Column({ name: 'count', type: 'integer' })
+    @Exclude()
     count: number;
 }

@@ -10,6 +10,11 @@ import ActiveUserInterface from 'src/common/interface/active-user.interface';
 import { UUID } from 'crypto';
 import { Shortlink } from 'src/shortlinks/entities/shortlink.entity';
 import { UsersHasShortlink } from 'src/users_has_shortlinks/entities/users_has_shortlink.entity';
+import { StatisticsService } from 'src/statistics/statistics.service';
+import { CreateStatisticDto } from 'src/statistics/dto/create-statistic.dto';
+import { UAParser } from 'ua-parser-js';
+import * as geoip from 'geoip-lite';
+
 
 
 @Injectable()
@@ -21,6 +26,7 @@ export class EventlinksService {
     private readonly shortlinksService: ShortlinksService,
     private readonly usersHasShortlinksService: UsersHasShortlinksService,
     private readonly dataSource: DataSource,
+    private readonly statisticsService: StatisticsService,
   ) { }
 
   async createEventlink(user: ActiveUserInterface, createEventlinkDto: CreateEventlinkDto) {
@@ -63,30 +69,60 @@ export class EventlinksService {
     }
   }
 
-  async searchEventLinkByShortlinkUrl(shortlinkUrl: string) {
+  async searchEventLinkByShortlinkUrl(shortlinkUrl: string, req: any) {
     const shortlink = await this.shortlinksService.findShortLinkByShortUrl(shortlinkUrl);
     if (!shortlink) {
       throw new NotFoundException('Shortlink not found');
     }
-    return shortlink;
+    const userAgentHeader = req.headers['user-agent'] || '';
+    const parser = new UAParser(userAgentHeader);
+    const result = parser.getResult();
+
+    let ip = req.clientIp || req.headers['x-forwarded-for'] || req.socket.remoteAddress || "";
+    if (Array.isArray(ip)) {
+      ip = ip[0];
+    }
+    if (ip.includes(',')) {
+      ip = ip.split(',')[0];
+    }
+    if (ip === '::1' || ip === '127.0.0.1') ip = '8.8.8.8';
+    const geo = geoip.lookup(ip);
+    const referrer = req.headers['referer'] || req.headers['Referrer'] || 'direct';
+
+    const newStatisticDto: CreateStatisticDto = {
+      ip: ip,
+      country: geo?.country || 'Unknown',
+      city: geo?.city || 'Unknown',
+      browser: result.browser.name || 'Unknown',
+      os: result.os.name || 'Unknown',
+      device: result.device.type || 'Desktop',
+      referrer: referrer,
+      idShortlink: shortlink.id,
+      visitedAt: new Date(),
+    }
+
+    await this.statisticsService.createStatistic(newStatisticDto);
+
+
+    return shortlink.url;
   }
 
   async findAllByUserId(userId: UUID) {
-    const linksIdUser: UsersHasShortlink[]  = await this.usersHasShortlinksService.findAllByUserId(userId);
+    const linksIdUser: UsersHasShortlink[] = await this.usersHasShortlinksService.findAllByUserId(userId);
     if (linksIdUser.length === 0) {
       throw new NotFoundException('Links not found');
     }
-    const promises = linksIdUser.map((Link : UsersHasShortlink)=> this.shortlinksService.findShortLinkById(Link.shortlinkId))
+    const promises = linksIdUser.map((Link: UsersHasShortlink) => this.shortlinksService.findShortLinkById(Link.shortlinkId))
     const links = await Promise.all(promises)
     if (links.length === 0) {
       throw new NotFoundException('Links not found');
     }
-    let linksOrdered = links.sort((a : Shortlink, b : Shortlink)=> b.count - a.count)
+    let linksOrdered = links.sort((a: Shortlink, b: Shortlink) => b.count - a.count)
     if (linksOrdered.length > 6) {
       linksOrdered = linksOrdered.slice(0, 6)
     }
     return linksOrdered;
-    
-    
+
+
   }
 }

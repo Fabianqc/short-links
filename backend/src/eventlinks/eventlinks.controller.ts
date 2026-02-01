@@ -8,6 +8,8 @@ import { ActiveUser } from 'src/common/decorators/active-user.decorator';
 import ActiveUserInterface from 'src/common/interface/active-user.interface';
 import { UseInterceptors } from '@nestjs/common';
 import { ClassSerializerInterceptor } from '@nestjs/common';
+import { Request } from 'express';
+import {Req} from '@nestjs/common';
 
 
 @Controller('eventlinks')
@@ -22,8 +24,8 @@ export class EventlinksController {
     }
     
     @Get(':shortlinkUrl')
-    redirect(@Param('shortlinkUrl') shortlinkUrl: string) {
-        return this.eventlinksService.searchEventLinkByShortlinkUrl(shortlinkUrl)
+    redirect(@Param('shortlinkUrl') shortlinkUrl: string, @Req() req: any) {
+        return this.eventlinksService.searchEventLinkByShortlinkUrl(shortlinkUrl, req)
     }
 
     @Get()

@@ -49,6 +49,6 @@ export class ShortlinksService {
         if (!shortlink) {
             throw new NotFoundException('Shortlink not found');
         }
-        return shortlink.url;
+        return shortlink;
     }
 }

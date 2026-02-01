@@ -2,6 +2,8 @@ import { Exclude } from "class-transformer";
 
 import { Column, Entity, PrimaryGeneratedColumn, Generated } from "typeorm";
 import { UUID } from "crypto";
+import { OneToMany } from "typeorm";
+import { Statistic } from "../../statistics/entities/statistic.entity";
 
 @Entity("shortlinks")
 export class Shortlink {
@@ -26,4 +28,8 @@ export class Shortlink {
     @Column({ name: 'count', type: 'integer' })
     @Exclude()
     count: number;
+
+
+    @OneToMany(() => Statistic, (statistic) => statistic.idShortlink)
+    statistics: Statistic[];
 }
